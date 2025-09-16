@@ -1,0 +1,23 @@
+import React from 'react';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
+import Home from '../pages/Home';
+import NotFound from '../pages/NotFound';
+import { ROUTES } from './routes';
+
+// Create the router configuration
+export const router = createBrowserRouter([
+  {
+    path: ROUTES.ROOT,
+    element: <Navigate to={ROUTES.HOME} replace />,
+  },
+  {
+    path: ROUTES.HOME,
+    element: <Home />,
+  },
+  {
+    path: '*',
+    element: <NotFound />,
+  },
+]);
+
+export default router; 

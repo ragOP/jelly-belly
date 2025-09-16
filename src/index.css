@@ -1,0 +1,73 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap');
+
+:root {
+  --primary-pink: #ffabbb;
+  --primary-pink-light: #ffe1e7;
+  --primary-pink-dark: #ff8a9f;
+}
+
+* {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.font-lora {
+  font-family: 'Lora', serif !important;
+}
+
+.animate-blink-light {
+  animation: blink-light 1.6s cubic-bezier(.4,0,.6,1) infinite;
+}
+@keyframes blink-light {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
+body {
+  background: #fefefe;
+  min-height: 100vh;
+}
+
+/* Custom animations for premium effects */
+@keyframes sparkle {
+  0%, 100% { 
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  50% { 
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(255, 171, 187, 0.3);
+  }
+  50% { 
+    box-shadow: 0 0 40px rgba(255, 171, 187, 0.6);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) skewX(-15deg);
+  }
+  100% {
+    transform: translateX(200%) skewX(-15deg);
+  }
+}
+
+.sparkle-animation {
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+.glow-animation {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+.shimmer-animation {
+  animation: shimmer 2s ease-in-out infinite;
+}
+
