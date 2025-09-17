@@ -1,4 +1,4 @@
-import { Shield, AlertTriangle, ArrowRight, X } from 'lucide-react'
+import { Shield, AlertTriangle, ArrowRight, X, ExternalLink } from 'lucide-react'
 import CTAButton from '../CTAButton'
 
 const SafetyHighlightSection = () => {
@@ -7,7 +7,7 @@ const SafetyHighlightSection = () => {
   };
 
   return (
-    <section className="py-8 md:py-24 bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50 relative overflow-hidden">
+    <section className="py-10 md:py-24 bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-5">
@@ -17,7 +17,7 @@ const SafetyHighlightSection = () => {
 
         <div className="relative">
           {/* Header */}
-          <div className="text-center mb-16">
+          <div className="text-center mb-8">
             <div className="inline-flex items-center gap-2 bg-red-100 text-red-800 px-4 py-2 rounded-full text-sm font-medium mb-6">
               <AlertTriangle className="w-4 h-4" />
               <span className='font-lora italic'>Critical Safety Alert</span>
@@ -36,8 +36,8 @@ const SafetyHighlightSection = () => {
             <div className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl border border-red-100 overflow-hidden mb-8">
               <div className="grid grid-cols-1 lg:grid-cols-2">
                 {/* Content */}
-                <div className="p-8 md:p-12">
-                  <div className="flex items-center gap-3 mb-6">
+                <div className="p-6">
+                  <div className="flex items-center gap-3">
                     <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
                       <AlertTriangle className="w-6 h-6 text-red-600" />
                     </div>
@@ -47,10 +47,33 @@ const SafetyHighlightSection = () => {
                     </div>
                   </div>
 
-                  <blockquote className="text-xl md:text-2xl text-gray-800 leading-relaxed mb-8 font-medium">
+                  <blockquote className="text-xl md:text-2xl text-gray-800 leading-relaxed font-medium mt-6">
                     "In 2023, a woman's claw clip pierced her skull in a car crash. Regular clips are rigid and dangerous."
                   </blockquote>
 
+                  {/* Article Link */}
+                  <div className="mt-6">
+                    <a
+                      href="https://nypost.com/2023/03/14/my-hair-clip-lodged-into-my-head-in-a-car-crash-thought-i-was-going-to-die/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-red-600 hover:text-red-700 text-sm font-medium transition-colors duration-200"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      Read full story on NYPost
+                    </a>
+                  </div>
+                </div>
+
+                {/* Image */}
+                <div className="relative">
+                  <img
+                    src="/clip-accident.webp"
+                    alt="Hair clip accident - dangerous rigid clip"
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-red-900/20 to-transparent"></div>
                 </div>
               </div>
             </div>

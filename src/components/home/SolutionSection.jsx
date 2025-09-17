@@ -65,12 +65,12 @@ const SolutionSection = () => {
           {/* Right Content - Demo Video Visual */}
 
           <video
-            src="/clip-video.mp4"
+            src="/clip-1.mp4"
             autoPlay
             loop
             muted
             playsInline
-            className="w-full object-contain animate-fade-in"
+            className="w-full h-[30rem] object-cover animate-fade-in"
             poster="/jelly-clip-main-2.png"
           />
 

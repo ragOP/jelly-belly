@@ -98,7 +98,7 @@ const SocialProofSection = () => {
   ]
 
   return (
-    <section className="py-16 md:py-20 bg-gradient-to-br from-[#fff5f7] via-[#fffafd] to-[#ffe1e7] overflow-hidden">
+    <section className="py-10 md:py-20 bg-gradient-to-br from-[#fff5f7] via-[#fffafd] to-[#ffe1e7] overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12">

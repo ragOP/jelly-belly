@@ -49,16 +49,16 @@ const ComparisonChartSection = () => {
         {/* Clean Comparison Table */}
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200 mb-12">
           {/* Simple Header */}
-          <div className="bg-gray-900 px-6 py-4">
-            <div className="grid grid-cols-3 gap-4 text-center">
+          <div className="bg-gray-900 px-6 py-6">
+            <div className="grid grid-cols-3 gap-4 text-center items-center">
               <div>
-                <h3 className="text-lg font-bold text-white">Feature</h3>
+                <h3 className="text-xl font-bold text-white">Feature</h3>
               </div>
               <div>
-                <h3 className="text-lg font-bold text-red-300">Regular Clips</h3>
+                <h3 className="text-xl font-bold text-red-300">Regular Clips</h3>
               </div>
               <div>
-                <h3 className="text-lg font-bold text-white">JellyClip</h3>
+                <h3 className="text-xl font-bold text-white">JellyClip</h3>
               </div>
             </div>
           </div>
@@ -68,20 +68,20 @@ const ComparisonChartSection = () => {
             {features.map((item, index) => (
               <div
                 key={index}
-                className={`grid grid-cols-3 gap-4 items-center px-6 py-4 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
+                className={`grid grid-cols-3 gap-4 items-center px-6 py-6 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
                   }`}
               >
                 {/* Feature Name */}
                 <div className="text-center md:text-left">
-                  <span className="font-semibold text-gray-900">{item.feature}</span>
+                  <span className="font-semibold text-gray-900 text-lg">{item.feature}</span>
                 </div>
 
                 {/* Regular Clips */}
                 <div className="text-center">
-                  <div className="flex items-center justify-center gap-2">
-                    <item.regularClips.icon className={`w-4 h-4 ${item.regularClips.status === 'bad' ? 'text-red-500' : 'text-green-500'
+                  <div className="flex items-center justify-center gap-3">
+                    <item.regularClips.icon className={`w-5 h-5 ${item.regularClips.status === 'bad' ? 'text-red-500' : 'text-green-500'
                       }`} />
-                    <span className={`text-sm ${item.regularClips.status === 'bad' ? 'text-red-600' : 'text-green-600'
+                    <span className={`text-base font-medium ${item.regularClips.status === 'bad' ? 'text-red-600' : 'text-green-600'
                       }`}>
                       {item.regularClips.text}
                     </span>
@@ -90,10 +90,10 @@ const ComparisonChartSection = () => {
 
                 {/* JellyClip */}
                 <div className="text-center">
-                  <div className="flex items-center justify-center gap-2">
-                    <item.jellyClip.icon className={`w-4 h-4 ${item.jellyClip.status === 'good' ? 'text-green-500' : 'text-red-500'
+                  <div className="flex items-center justify-center gap-3">
+                    <item.jellyClip.icon className={`w-5 h-5 ${item.jellyClip.status === 'good' ? 'text-green-500' : 'text-red-500'
                       }`} />
-                    <span className={`text-sm ${item.jellyClip.status === 'good' ? 'text-green-600' : 'text-red-600'
+                    <span className={`text-base font-medium ${item.jellyClip.status === 'good' ? 'text-green-600' : 'text-red-600'
                       }`}>
                       {item.jellyClip.text}
                     </span>
@@ -105,7 +105,7 @@ const ComparisonChartSection = () => {
         </div>
 
         {/* CTA Button */}
-        <div className="text-center">
+        <div className="text-center mb-8">
           <CTAButton
             onClick={handleCTAClick}
             size="lg"
@@ -114,6 +114,15 @@ const ComparisonChartSection = () => {
             Choose JellyClip Today 🚀
           </CTAButton>
         </div>
+
+        <video 
+          src="/clip-vid-main.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="w-full h-[24rem] object-cover shadow-2xl"
+        />
       </div>
     </section>
   )
