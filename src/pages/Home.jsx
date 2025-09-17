@@ -3,16 +3,29 @@ import Header from '../components/Header';
 import Hero from '../components/home/Hero';
 import ProblemSection from '../components/home/ProblemSection';
 import SolutionSection from '../components/home/SolutionSection';
+import SocialProofSection from '../components/home/SocialProofSection';
+import ProductShowcaseSection from '../components/home/ProductShowcaseSection';
+import ComparisonChartSection from '../components/home/ComparisonChartSection';
+import SafetyHighlightSection from '../components/home/SafetyHighlightSection';
+import LifestyleSection from '../components/home/LifestyleSection';
+import FAQSection from '../components/home/FAQSection';
+import ClosingCTASection from '../components/home/ClosingCTASection';
 
 const Home = () => {
   return (
     <div className="min-h-screen">
       <Header />
-      <main className='bg-gradient-to-r from-[#ffe1e7] to-[#fff5f7]'>
+      <main>
         <Hero />
         <ProblemSection />
         <SolutionSection />
-        {/* Future sections can be added here */}
+        <SocialProofSection />
+        <ProductShowcaseSection />
+        <ComparisonChartSection />
+        <SafetyHighlightSection />
+        <LifestyleSection />
+        <FAQSection />
+        {/* <ClosingCTASection /> */}
       </main>
     </div>
   );
