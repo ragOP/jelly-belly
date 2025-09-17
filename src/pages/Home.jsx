@@ -25,7 +25,7 @@ const Home = () => {
         <SafetyHighlightSection />
         <LifestyleSection />
         <FAQSection />
-        {/* <ClosingCTASection /> */}
+        <ClosingCTASection />
       </main>
     </div>
   );
