@@ -80,11 +80,10 @@ const FAQSection = () => {
                     </h3>
                   </div>
                   <div className="flex-shrink-0">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${
-                      openFAQ === index 
-                        ? 'bg-[#ff8a9f] text-white' 
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${openFAQ === index
+                        ? 'bg-[#ff8a9f] text-white'
                         : 'bg-[#ffe1e7] text-[#ff8a9f] group-hover:bg-[#ff8a9f] group-hover:text-white'
-                    }`}>
+                      }`}>
                       {openFAQ === index ? (
                         <ChevronUp className="w-4 h-4" />
                       ) : (
@@ -93,10 +92,9 @@ const FAQSection = () => {
                     </div>
                   </div>
                 </button>
-                
-                <div className={`transition-all duration-300 ease-in-out ${
-                  openFAQ === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-                } overflow-hidden`}>
+
+                <div className={`transition-all duration-300 ease-in-out ${openFAQ === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                  } overflow-hidden`}>
                   <div className="px-6 pb-6">
                     <div className="bg-gradient-to-r from-[#fff5f7] to-[#ffe1e7] rounded-xl p-4 border-l-4 border-[#ff8a9f]">
                       <p className="text-gray-700 leading-relaxed">
@@ -110,84 +108,7 @@ const FAQSection = () => {
           ))}
         </div>
 
-        {/* Stats Section */}
-        <div className="mb-16">
-          <div className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl border border-[#ffabbb]/20 p-8 md:p-12">
-            <div className="text-center mb-8">
-              <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-                Why <span className="text-[#ff8a9f] font-lora italic">50,000+</span> Customers Choose JellyClip
-              </h3>
-              <div className="w-16 h-1 bg-gradient-to-r from-[#ffabbb] to-[#ff8a9f] mx-auto rounded-full"></div>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-[#ff8a9f] to-[#ffabbb] rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                  <span className="text-2xl">💪</span>
-                </div>
-                <div className="text-3xl font-bold text-[#ff8a9f] mb-2">99%</div>
-                <div className="text-gray-700 font-medium">Unbreakable Rating</div>
-              </div>
-              
-              <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-[#ff8a9f] to-[#ffabbb] rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                  <span className="text-2xl">😌</span>
-                </div>
-                <div className="text-3xl font-bold text-[#ff8a9f] mb-2">95%</div>
-                <div className="text-gray-700 font-medium">All-Day Comfort</div>
-              </div>
-              
-              <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-[#ff8a9f] to-[#ffabbb] rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                  <span className="text-2xl">🛡️</span>
-                </div>
-                <div className="text-3xl font-bold text-[#ff8a9f] mb-2">100%</div>
-                <div className="text-gray-700 font-medium">Safety Tested</div>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        {/* Bottom CTA */}
-        <div className="text-center">
-          <div className="bg-gradient-to-r from-[#ff8a9f] to-[#ffabbb] rounded-3xl p-8 md:p-12 text-white shadow-2xl relative overflow-hidden">
-            {/* Background pattern */}
-            <div className="absolute inset-0 bg-white/5 opacity-50"></div>
-            <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
-            <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-12 -translate-x-12"></div>
-            
-            <div className="relative z-10">
-              <h3 className="text-3xl md:text-4xl font-bold mb-4">
-                Still Have Questions?
-              </h3>
-              <p className="text-pink-100 text-lg mb-8 max-w-2xl mx-auto leading-relaxed">
-                Our customer support team is here to help you make the right choice. Get personalized answers to all your JellyClip questions.
-              </p>
-              <CTAButton
-                onClick={handleCTAClick}
-                size="lg"
-                className="bg-white text-[#ff8a9f] hover:bg-gray-50 font-bold px-8 py-4 text-lg shadow-xl"
-              >
-                Get Your Questions Answered 💬
-              </CTAButton>
-              
-              <div className="mt-8 flex items-center justify-center gap-8 text-pink-100 text-sm">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-white rounded-full"></div>
-                  <span>24/7 Support</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-white rounded-full"></div>
-                  <span>Expert Advice</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-white rounded-full"></div>
-                  <span>Quick Response</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   )
