@@ -8,9 +8,9 @@ const SocialProofSection = () => {
     stopOnInteraction: false,
     stopOnMouseEnter: true,
   }
-  
+
   const [emblaRef] = useEmblaCarousel(
-    { 
+    {
       loop: true,
       align: 'start',
       skipSnaps: false,
@@ -30,7 +30,7 @@ const SocialProofSection = () => {
       verified: true
     },
     {
-      name: "Neha", 
+      name: "Neha",
       age: 34,
       role: "mom",
       quote: "Even with my daughter pulling at it, it never broke. I feel safer driving now.",
@@ -40,7 +40,7 @@ const SocialProofSection = () => {
     },
     {
       name: "Ananya",
-      age: 19, 
+      age: 19,
       role: "student",
       quote: "Every girl in college asks me where I got this. It's literally cute AF and unbreakable.",
       avatar: "👩‍🎓",
@@ -74,7 +74,7 @@ const SocialProofSection = () => {
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
           {stats.map((stat, index) => (
-            <div 
+            <div
               key={index}
               className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 text-center shadow-lg border border-[#ffabbb]/20 hover:shadow-xl transition-all duration-300 hover:scale-105"
             >
@@ -93,10 +93,8 @@ const SocialProofSection = () => {
         {/* Testimonials Carousel */}
         <div className="relative">
           <div className="text-center mb-10">
-            <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
-              Real Stories, Real Results
-            </h3>
-            <p className="text-gray-600 text-lg max-w-2xl mx-auto font-lora">
+
+            <p className="text-gray-600 font-bold text-lg max-w-2xl mx-auto font-lora">
               Hear from the girls who made the switch to JellyClip
             </p>
           </div>
@@ -109,28 +107,28 @@ const SocialProofSection = () => {
                     {/* Background Pattern */}
                     <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-[#ffe1e7] to-[#fff5f7] rounded-full -translate-y-10 translate-x-10"></div>
                     <div className="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-br from-[#fff5f7] to-[#ffe1e7] rounded-full translate-y-8 -translate-x-8"></div>
-                    
+
                     {/* Quote Icon */}
                     <div className="relative z-10 mb-4">
                       <div className="w-12 h-12 bg-gradient-to-br from-[#ff8a9f] to-[#ffabbb] rounded-full flex items-center justify-center mb-4">
                         <Quote className="w-6 h-6 text-white" />
                       </div>
                     </div>
-                    
+
                     {/* Quote */}
                     <div className="relative z-10 mb-6">
                       <p className="text-gray-800 text-base leading-relaxed font-medium font-lora italic">
                         "{testimonial.quote}"
                       </p>
                     </div>
-                    
+
                     {/* Rating */}
                     <div className="relative z-10 flex items-center gap-1 mb-4">
                       {[...Array(testimonial.rating)].map((_, i) => (
                         <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
                       ))}
                     </div>
-                    
+
                     {/* Author */}
                     <div className="relative z-10 flex items-center gap-3 pt-4 border-t border-[#ffabbb]/20">
                       <div className="text-3xl">
@@ -161,10 +159,10 @@ const SocialProofSection = () => {
           {/* Carousel Indicators */}
           <div className="flex justify-center gap-2 mt-6">
             {testimonials.map((_, index) => (
-              <div 
+              <div
                 key={index}
                 className="w-2 h-2 bg-[#ffabbb] rounded-full transition-all duration-300"
-                style={{ 
+                style={{
                   backgroundColor: index === 0 ? '#ff8a9f' : '#ffabbb',
                   transform: index === 0 ? 'scale(1.2)' : 'scale(1)'
                 }}
