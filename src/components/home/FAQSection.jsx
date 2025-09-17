@@ -51,13 +51,11 @@ const FAQSection = () => {
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
             <span className="text-[#ff8a9f] font-lora italic">Frequently Asked</span>
             <br />
-            <span className="text-[#ffabbb] font-lora italic">Questions</span> <span className="align-middle text-2xl">❓</span>
+            <span className="text-[#000] font-lora italic">Questions ?</span>
           </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-[#ffabbb] to-[#ff8a9f] mx-auto rounded-full mb-6"></div>
 
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed mb-8">
-            Everything you need to know about JellyClip
-          </p>
+
         </div>
 
         {/* FAQ Grid */}
@@ -70,7 +68,7 @@ const FAQSection = () => {
               <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-[#ffabbb]/20 overflow-hidden hover:shadow-xl transition-all duration-300 h-full">
                 <button
                   onClick={() => setOpenFAQ(openFAQ === index ? -1 : index)}
-                  className="w-full p-6 text-left flex items-start justify-between hover:bg-[#ffe1e7]/30 transition-colors duration-200"
+                  className="w-full px-4 py-4 mt-2 text-left flex items-start justify-between hover:bg-[#ffe1e7]/30 transition-colors duration-200"
                 >
                   <div className="flex-1 pr-4">
                     <h3 className="text-lg md:text-xl font-bold text-gray-900 leading-tight group-hover:text-[#ff8a9f] transition-colors duration-200">
@@ -93,7 +91,7 @@ const FAQSection = () => {
 
                 <div className={`transition-all duration-300 ease-in-out ${openFAQ === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
                   } overflow-hidden`}>
-                  <div className="px-6 pb-6">
+                  <div className="px-4 pb-4">
                     <div className="bg-gradient-to-r from-[#fff5f7] to-[#ffe1e7] rounded-xl p-4 border-l-4 border-[#ff8a9f]">
                       <p className="text-gray-700 leading-relaxed">
                         {faq.answer}
