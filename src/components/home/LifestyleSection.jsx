@@ -9,7 +9,7 @@ const LifestyleSection = () => {
       name: 'Ananya',
       age: 19,
       description: 'From lectures to late-night study sessions',
-      image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?auto=format&fit=crop&w=300&h=300&q=80',
+      image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&h=400&q=80',
       icon: Coffee,
       background: 'from-[#ff8a9f] to-[#ffabbb]',
       features: ['All-day comfort', 'Never breaks', 'Instagram-worthy']
@@ -20,7 +20,7 @@ const LifestyleSection = () => {
       name: 'Riya',
       age: 28,
       description: '9-to-9 at work, looking flawless',
-      image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=300&h=300&q=80',
+      image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=400&h=400&q=80',
       icon: Laptop,
       background: 'from-[#ffabbb] to-[#ff8a9f]',
       features: ['Executive style', 'Zero headaches', 'Meeting-ready']
@@ -31,7 +31,7 @@ const LifestyleSection = () => {
       name: 'Neha',
       age: 32,
       description: 'Driving with kids, staying safe',
-      image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&h=300&q=80',
+      image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&h=400&q=80',
       icon: Car,
       background: 'from-[#ff8a9f] to-[#ffabbb]',
       features: ['Child-safe', 'Flexible design', 'Peace of mind']
@@ -59,58 +59,62 @@ const LifestyleSection = () => {
       </div>
 
       {/* Lifestyle Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4 max-w-6xl mx-auto">
         {lifestyles.map((lifestyle, index) => (
           <div
             key={lifestyle.id}
             className="group hover:scale-105 transition-all duration-500"
             style={{ animationDelay: `${index * 0.1}s` }}
           >
-            <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-lg border border-[#ffabbb]/20 overflow-hidden hover:shadow-2xl transition-all duration-300">
+            <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-[#ffabbb]/20 overflow-hidden hover:shadow-2xl transition-all duration-300 h-full">
               {/* Header */}
-              <div className={`bg-gradient-to-br ${lifestyle.background} p-8 text-white relative overflow-hidden`}>
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
-                <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-12 -translate-x-12"></div>
+              <div className={`bg-gradient-to-br ${lifestyle.background} p-5 text-white relative overflow-hidden`}>
+                <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -translate-y-10 translate-x-10"></div>
+                <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/10 rounded-full translate-y-8 -translate-x-8"></div>
 
                 <div className="relative z-10">
-                  <div className="flex items-center gap-4 mb-4">
+                  <div className="flex items-center gap-3 mb-3">
                     {/* Real Image */}
                     <div className="relative">
                       <img
                         src={lifestyle.image}
                         alt={`${lifestyle.name} - ${lifestyle.title}`}
-                        className="w-16 h-16 rounded-full object-cover border-4 border-white/30 shadow-lg"
+                        className="w-12 h-12 rounded-full object-cover border-3 border-white/30 shadow-lg"
+                        loading="lazy"
+                        onError={(e) => {
+                          e.target.src = 'https://images.unsplash.com/photo-1494790108755-2616b612b786?auto=format&fit=crop&w=400&h=400&q=80'
+                        }}
                       />
-                      <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-md">
-                        <lifestyle.icon className="w-3 h-3 text-gray-600" />
+                      <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-white rounded-full flex items-center justify-center shadow-md">
+                        <lifestyle.icon className="w-2.5 h-2.5 text-gray-600" />
                       </div>
                     </div>
                     <div>
-                      <h3 className="text-2xl font-bold mb-1">{lifestyle.title}</h3>
-                      <p className="text-white/90 font-medium">{lifestyle.name}, {lifestyle.age}</p>
+                      <h3 className="text-lg font-bold mb-0.5">{lifestyle.title}</h3>
+                      <p className="text-white/90 text-sm font-medium">{lifestyle.name}, {lifestyle.age}</p>
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Content */}
-              <div className="p-8">
-                <p className="text-gray-600 text-lg mb-6 leading-relaxed">
+              <div className="p-5 flex-1">
+                <p className="text-gray-600 text-base mb-4 leading-relaxed">
                   {lifestyle.description}
                 </p>
 
-                <div className="space-y-3">
+                <div className="space-y-2">
                   {lifestyle.features.map((feature, featureIndex) => (
-                    <div key={featureIndex} className="flex items-center gap-3">
-                      <div className={`w-2 h-2 bg-gradient-to-r ${lifestyle.background} rounded-full`}></div>
-                      <span className="text-gray-700 font-medium">{feature}</span>
+                    <div key={featureIndex} className="flex items-center gap-2">
+                      <div className={`w-1.5 h-1.5 bg-gradient-to-r ${lifestyle.background} rounded-full flex-shrink-0`}></div>
+                      <span className="text-gray-700 text-sm font-medium">{feature}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
               {/* Bottom accent */}
-              <div className={`h-2 bg-gradient-to-r ${lifestyle.background}`}></div>
+              <div className={`h-1.5 bg-gradient-to-r ${lifestyle.background}`}></div>
             </div>
           </div>
         ))}
@@ -120,4 +124,4 @@ const LifestyleSection = () => {
   )
 }
 
-export default LifestyleSection 
+export default LifestyleSection

@@ -5,9 +5,6 @@ import CTAButton from '../CTAButton'
 const FAQSection = () => {
   const [openFAQ, setOpenFAQ] = useState(0)
 
-  const handleCTAClick = () => {
-    console.log('FAQ CTA clicked - Get Answers Now');
-  };
 
   const faqs = [
     {
@@ -37,7 +34,7 @@ const FAQSection = () => {
   ]
 
   return (
-    <section className="py-16 md:py-24 bg-gradient-to-br from-[#fff5f7] via-[#fffafd] to-[#ffe1e7] relative overflow-hidden">
+    <section className="py-10 md:py-24 bg-gradient-to-br from-[#fff5f7] via-[#fffafd] to-[#ffe1e7] relative overflow-hidden">
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-20 w-64 h-64 bg-[#ff8a9f]/10 rounded-full blur-3xl"></div>
@@ -46,7 +43,7 @@ const FAQSection = () => {
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
-        <div className="text-center mb-16">
+        <div className="text-center">
           <div className="inline-flex items-center gap-2 bg-white border border-[#ffabbb]/30 rounded-full px-4 py-2 text-sm font-semibold text-[#ff8a9f] shadow-md font-lora mb-6">
             <HelpCircle className="w-4 h-4 text-[#ff8a9f]" />
             <span className='font-lora italic'>Got Questions?</span>
@@ -56,14 +53,15 @@ const FAQSection = () => {
             <br />
             <span className="text-[#ffabbb] font-lora italic">Questions</span> <span className="align-middle text-2xl">❓</span>
           </h2>
+          <div className="w-24 h-1 bg-gradient-to-r from-[#ffabbb] to-[#ff8a9f] mx-auto rounded-full mb-6"></div>
+
           <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed mb-8">
             Everything you need to know about JellyClip
           </p>
-          <div className="w-24 h-1 bg-gradient-to-r from-[#ffabbb] to-[#ff8a9f] mx-auto rounded-full"></div>
         </div>
 
         {/* FAQ Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {faqs.map((faq, index) => (
             <div
               key={index}
@@ -81,8 +79,8 @@ const FAQSection = () => {
                   </div>
                   <div className="flex-shrink-0">
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${openFAQ === index
-                        ? 'bg-[#ff8a9f] text-white'
-                        : 'bg-[#ffe1e7] text-[#ff8a9f] group-hover:bg-[#ff8a9f] group-hover:text-white'
+                      ? 'bg-[#ff8a9f] text-white'
+                      : 'bg-[#ffe1e7] text-[#ff8a9f] group-hover:bg-[#ff8a9f] group-hover:text-white'
                       }`}>
                       {openFAQ === index ? (
                         <ChevronUp className="w-4 h-4" />
