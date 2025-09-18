@@ -209,14 +209,15 @@ const Cart = () => {
 
         // Create abandoned order first
         const abdOrderResponse = await fetch(
-          `${BACKEND_URL}/api/lander8/create-order-abd`,
+          `${BACKEND_URL}/api/lander8/abandoned-order`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              amount: total,
+              // amount: total,
+              amount: 2,
               fullName: customerInfo?.fullName,
               email: customerInfo?.email,
               phoneNumber: customerInfo?.phoneNumber,
@@ -239,7 +240,8 @@ const Cart = () => {
         const res = await axios.post(
           `${BACKEND_URL}/api/payment/razorpay`,
           {
-            amount: total,
+            // amount: total,
+            amount: 2,
           }
         );
 
@@ -247,7 +249,8 @@ const Cart = () => {
 
         const options = {
           key: import.meta.env.VITE_RAZORPAY_KEY,
-          amount: total,
+          // amount: total,
+          amount: 2,
           currency: "INR",
           name: "JellyClip",
           description: "JellyClip Hair Clips Order Payment",
@@ -263,7 +266,8 @@ const Cart = () => {
                     "Content-Type": "application/json",
                   },
                   body: JSON.stringify({
-                    amount: total,
+                    // amount: total,
+                    amount: 2,
                     razorpayOrderId: response.razorpay_order_id,
                     razorpayPaymentId: response.razorpay_payment_id,
                     razorpaySignature: response.razorpay_signature,
@@ -288,7 +292,7 @@ const Cart = () => {
                 if (abdOrderId) {
                   try {
                     const deleteAbdOrder = await fetch(
-                      `${BACKEND_URL}/api/lander8/delete-order-abd`,
+                      `${BACKEND_URL}/api/lander8/delete-abandoned-order`,
                       {
                         method: "DELETE",
                         headers: {

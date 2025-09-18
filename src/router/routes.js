@@ -4,6 +4,7 @@ export const ROUTES = {
   CART: '/cart',
   ORDER_CONFIRMATION: '/order-confirmation',
   RECORD: '/record',
+  ABANDONED_ORDERS: '/abandoned-orders',
   ROOT: '/',
 };
 
@@ -32,6 +33,11 @@ export const routeConfig = [
     path: ROUTES.RECORD,
     name: 'Record',
     component: 'Record',
+  },
+  {
+    path: ROUTES.ABANDONED_ORDERS,
+    name: 'AbandonedOrders',
+    component: 'AbandonedOrders',
   },
 ];
 

@@ -6,6 +6,7 @@ import { ROUTES } from './routes';
 import Cart from '../pages/Cart';
 import OrderConfirmation from '../pages/OrderConfirmation';
 import Record from '../pages/Record';
+import AbandonedOrders from '../pages/AbandonedOrders';
 
 // Create the router configuration
 export const router = createBrowserRouter([
@@ -28,6 +29,10 @@ export const router = createBrowserRouter([
   {
     path: ROUTES.RECORD,
     element: <Record />,
+  },
+  {
+    path: ROUTES.ABANDONED_ORDERS,
+    element: <AbandonedOrders />,
   },
   {
     path: '*',
