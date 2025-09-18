@@ -1,8 +1,12 @@
+import { useNavigate } from 'react-router';
 import CTAButton from '../CTAButton'
+import ROUTES from '../../router/routes';
 
 const ComparisonChartSection = () => {
+  const navigate = useNavigate()
+
   const handleCTAClick = () => {
-    console.log('Comparison CTA clicked - Choose JellyClip');
+    navigate(ROUTES.CART)
   };
 
   const features = [

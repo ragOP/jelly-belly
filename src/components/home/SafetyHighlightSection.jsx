@@ -1,9 +1,13 @@
 import { Shield, AlertTriangle, ArrowRight, X, ExternalLink } from 'lucide-react'
 import CTAButton from '../CTAButton'
+import { useNavigate } from 'react-router';
+import ROUTES from '../../router/routes';
 
 const SafetyHighlightSection = () => {
+  const navigate = useNavigate()
+
   const handleCTAClick = () => {
-    console.log('Final CTA clicked - Get Yours Now');
+    navigate(ROUTES.CART)
   };
 
   return (

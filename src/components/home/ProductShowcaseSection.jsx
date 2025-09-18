@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react'
 import { ShoppingCart, Star, ChevronLeft, ChevronRight, Check } from 'lucide-react'
 import CTAButton from '../CTAButton'
+import { useNavigate } from 'react-router'
+import ROUTES from '../../router/routes'
 
 const ProductShowcaseSection = () => {
+  const navigate = useNavigate()
   const [selectedColor, setSelectedColor] = useState('cherry-red')
   const [selectedBundle, setSelectedBundle] = useState('4-pack')
   const [currentImage, setCurrentImage] = useState(0)
@@ -95,6 +98,7 @@ const ProductShowcaseSection = () => {
   const selectedBundleData = bundles.find(b => b.id === selectedBundle)
 
   const handleCTAClick = () => {
+    navigate(ROUTES.CART)
     console.log('Add to Cart clicked:', selectedBundleData?.price);
   };
 
@@ -300,7 +304,7 @@ const ProductShowcaseSection = () => {
                         </div>
                         {bundle.savings > 0 && (
                           <div className="text-sm text-green-600">
-                            Save ${bundle.savings.toFixed(2)}
+                            Save ₹{bundle.savings}
                           </div>
                         )}
                       </div>
@@ -317,8 +321,8 @@ const ProductShowcaseSection = () => {
                 size="lg"
                 className="w-full text-lg px-8 py-4 font-bold flex items-center justify-center gap-3"
               >
-                <ShoppingCart className="w-6 h-6" />
-                Add to Cart - ${selectedBundleData?.price}
+                <ShoppingCart className="w-6 h-6 mr-2" />
+                Add to Cart - ₹{selectedBundleData?.price}
               </CTAButton>
             </div>
 
