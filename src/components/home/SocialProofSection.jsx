@@ -178,7 +178,7 @@ const SocialProofSection = () => {
             <div className="embla overflow-hidden" ref={emblaRef}>
               <div className="embla__container flex">
                 {testimonials.map((testimonial, index) => (
-                  <div key={index} className="embla__slide flex-[0_0_100%] pl-4">
+                  <div key={index} className="embla__slide flex-[0_0_100%]">
                     <div className="bg-white rounded-2xl p-8 shadow-lg border border-[#ffabbb]/20 h-full hover:shadow-xl transition-all duration-300 mx-2 relative overflow-hidden max-w-md mx-auto">
                       {/* Background Pattern */}
                       <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-[#ffe1e7] to-[#fff5f7] rounded-full -translate-y-10 translate-x-10"></div>

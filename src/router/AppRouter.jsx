@@ -3,6 +3,7 @@ import { createBrowserRouter, Navigate } from 'react-router-dom';
 import Home from '../pages/Home';
 import NotFound from '../pages/NotFound';
 import { ROUTES } from './routes';
+import Cart from '../pages/Cart';
 
 // Create the router configuration
 export const router = createBrowserRouter([
@@ -13,6 +14,10 @@ export const router = createBrowserRouter([
   {
     path: ROUTES.HOME,
     element: <Home />,
+  },
+  {
+    path: ROUTES.CART,
+    element: <Cart />,
   },
   {
     path: '*',
