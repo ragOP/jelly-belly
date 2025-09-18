@@ -167,7 +167,7 @@ const Cart = () => {
       ...prev,
       [field]: value
     }))
-    
+
     // Clear error when user starts typing
     if (formErrors[field]) {
       setFormErrors(prev => ({
@@ -179,23 +179,23 @@ const Cart = () => {
 
   const validateForm = () => {
     const errors = {}
-    
+
     if (!customerInfo.fullName.trim()) {
       errors.fullName = 'Full name is required'
     }
-    
+
     if (!customerInfo.email.trim()) {
       errors.email = 'Email is required'
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerInfo.email)) {
       errors.email = 'Please enter a valid email'
     }
-    
+
     if (!customerInfo.phoneNumber.trim()) {
       errors.phoneNumber = 'Phone number is required'
     } else if (!/^[\+]?[1-9][\d]{0,15}$/.test(customerInfo.phoneNumber.replace(/[\s\-\(\)]/g, ''))) {
       errors.phoneNumber = 'Please enter a valid phone number'
     }
-    
+
     setFormErrors(errors)
     return Object.keys(errors).length === 0
   }
@@ -207,10 +207,39 @@ const Cart = () => {
       try {
         setIsCheckingOut(true);
 
+        // Create abandoned order first
+        const abdOrderResponse = await fetch(
+          `${BACKEND_URL}/api/lander8/create-order-abd`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              amount: total,
+              fullName: customerInfo?.fullName,
+              email: customerInfo?.email,
+              phoneNumber: customerInfo?.phoneNumber,
+              selectedBundle: selectedBundle,
+              cartItems: cartItems,
+            }),
+          }
+        );
+
+        const abdOrderResult = await abdOrderResponse.json();
+        const abdOrderId = abdOrderResult.data?._id;
+
+        if (!abdOrderResult.success) {
+          console.warn("Failed to create abandoned order, but continuing with checkout");
+        } else {
+          console.log("Abandoned Order Created with Id", abdOrderId);
+        }
+
+        // Create Razorpay order
         const res = await axios.post(
           `${BACKEND_URL}/api/payment/razorpay`,
           {
-            amount: total, // Convert to paise for Razorpay
+            amount: total,
           }
         );
 
@@ -218,33 +247,72 @@ const Cart = () => {
 
         const options = {
           key: import.meta.env.VITE_RAZORPAY_KEY,
-          amount: total * 100, // Convert to paise for Razorpay
+          amount: total,
           currency: "INR",
           name: "JellyClip",
           description: "JellyClip Hair Clips Order Payment",
           order_id: data.orderId,
           handler: async function (response) {
             try {
-              await axios.post(`${BACKEND_URL}/api/lander8/create-order`, {
-                amount: total,
-                razorpayOrderId: response.razorpay_order_id,
-                razorpayPaymentId: response.razorpay_payment_id,
-                razorpaySignature: response.razorpay_signature,
-                fullName: customerInfo?.fullName,
-                email: customerInfo?.email,
-                phoneNumber: customerInfo?.phoneNumber,
-                // profession: consultationFormData?.profession,
-                // remarks: consultationFormData?.remarks,
-                orderId: data.orderId,
-                // additionalProducts: additionalProducts,
-              });
+              // Create order in database
+              const orderResponse = await fetch(
+                `${BACKEND_URL}/api/lander8/create-order`,
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    amount: total,
+                    razorpayOrderId: response.razorpay_order_id,
+                    razorpayPaymentId: response.razorpay_payment_id,
+                    razorpaySignature: response.razorpay_signature,
+                    fullName: customerInfo?.fullName,
+                    email: customerInfo?.email,
+                    phoneNumber: customerInfo?.phoneNumber,
+                    selectedBundle: selectedBundle,
+                    cartItems: cartItems,
+                    orderId: data.orderId,
+                  }),
+                }
+              );
 
-              navigate("/order-confirmation", {
-                state: {
-                  orderId: data.orderId,
-                  amount: total,
-                },
-              });
+              const orderResult = await orderResponse.json();
+
+              if (orderResult.success) {
+                // Store order details in session storage
+                sessionStorage.setItem("orderId", data.orderId);
+                sessionStorage.setItem("orderAmount", total.toString());
+
+                // Delete abandoned order if order is created successfully
+                if (abdOrderId) {
+                  try {
+                    const deleteAbdOrder = await fetch(
+                      `${BACKEND_URL}/api/lander8/delete-order-abd`,
+                      {
+                        method: "DELETE",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ email: customerInfo?.email }),
+                      }
+                    );
+                    const deleteAbdOrderResult = await deleteAbdOrder.json();
+                    console.log("Abandoned Order Deleted", deleteAbdOrderResult);
+                  } catch (deleteError) {
+                    console.warn("Failed to delete abandoned order:", deleteError);
+                  }
+                }
+
+                navigate("/order-confirmation", {
+                  state: {
+                    orderId: data.orderId,
+                    amount: total,
+                  },
+                });
+              } else {
+                alert("Payment successful but order creation failed. Please contact support.");
+              }
             } catch (error) {
               console.error("Error creating order:", error);
               alert("Payment successful but order creation failed. Please contact support.");
@@ -256,14 +324,15 @@ const Cart = () => {
             contact: customerInfo?.phoneNumber,
           },
           theme: {
-            color: "#000000",
+            color: "#ff8a9f",
           },
         };
 
         const rzp = new window.Razorpay(options);
         rzp.open();
       } catch (error) {
-        console.log(error);
+        console.error("Checkout error:", error);
+        alert("Payment failed. Please try again.");
       } finally {
         setIsCheckingOut(false);
       }
@@ -445,13 +514,12 @@ const Cart = () => {
                       <button
                         key={bundle.id}
                         onClick={() => updateBundle(bundle.id)}
-                        className={`w-full p-2 rounded-lg border-2 transition-all duration-300 text-left ${
-                          bundle.discountPercent === 25 
-                            ? 'ring-2 ring-red-400 ring-opacity-50 shadow-lg' 
-                            : ''
-                        } ${selectedBundle === bundle.id
-                          ? 'border-[#ff8a9f] bg-gradient-to-r from-[#ff8a9f]/10 to-[#ffabbb]/10'
-                          : 'border-[#ffabbb]/30 hover:border-[#ff8a9f]/50'
+                        className={`w-full p-2 rounded-lg border-2 transition-all duration-300 text-left ${bundle.discountPercent === 25
+                          ? 'ring-2 ring-red-400 ring-opacity-50 shadow-lg'
+                          : ''
+                          } ${selectedBundle === bundle.id
+                            ? 'border-[#ff8a9f] bg-gradient-to-r from-[#ff8a9f]/10 to-[#ffabbb]/10'
+                            : 'border-[#ffabbb]/30 hover:border-[#ff8a9f]/50'
                           }`}
                       >
                         <div className="flex items-center justify-between">
@@ -468,11 +536,10 @@ const Cart = () => {
                                   {bundle.quantity}-Pack
                                 </div>
                                 {bundle.discountPercent > 0 && (
-                                  <span className={`inline-block px-2 py-1 rounded-full text-xs font-bold ${
-                                    bundle.discountPercent === 25 
-                                      ? 'bg-gradient-to-r from-red-500 to-pink-500 text-white animate-pulse' 
-                                      : 'bg-gradient-to-r from-[#ff8a9f] to-[#ffabbb] text-white'
-                                  }`}>
+                                  <span className={`inline-block px-2 py-1 rounded-full text-xs font-bold ${bundle.discountPercent === 25
+                                    ? 'bg-gradient-to-r from-red-500 to-pink-500 text-white animate-pulse'
+                                    : 'bg-gradient-to-r from-[#ff8a9f] to-[#ffabbb] text-white'
+                                    }`}>
                                     {bundle.badge}
                                   </span>
                                 )}
@@ -543,7 +610,7 @@ const Cart = () => {
                 {/* Customer Information Form */}
                 <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-lg border border-[#ffabbb]/20">
                   <h3 className="text-lg font-bold text-gray-900 mb-4 text-center">Customer Information</h3>
-                  
+
                   <div className="space-y-4">
                     {/* Full Name */}
                     <div>
@@ -555,9 +622,8 @@ const Cart = () => {
                         id="fullName"
                         value={customerInfo.fullName}
                         onChange={(e) => handleInputChange('fullName', e.target.value)}
-                        className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff8a9f] focus:border-transparent transition-all duration-200 ${
-                          formErrors.fullName ? 'border-red-500' : 'border-[#ffabbb]/30'
-                        }`}
+                        className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff8a9f] focus:border-transparent transition-all duration-200 ${formErrors.fullName ? 'border-red-500' : 'border-[#ffabbb]/30'
+                          }`}
                         placeholder="Enter your full name"
                       />
                       {formErrors.fullName && (
@@ -575,9 +641,8 @@ const Cart = () => {
                         id="email"
                         value={customerInfo.email}
                         onChange={(e) => handleInputChange('email', e.target.value)}
-                        className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff8a9f] focus:border-transparent transition-all duration-200 ${
-                          formErrors.email ? 'border-red-500' : 'border-[#ffabbb]/30'
-                        }`}
+                        className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff8a9f] focus:border-transparent transition-all duration-200 ${formErrors.email ? 'border-red-500' : 'border-[#ffabbb]/30'
+                          }`}
                         placeholder="Enter your email address"
                       />
                       {formErrors.email && (
@@ -595,9 +660,8 @@ const Cart = () => {
                         id="phoneNumber"
                         value={customerInfo.phoneNumber}
                         onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
-                        className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff8a9f] focus:border-transparent transition-all duration-200 ${
-                          formErrors.phoneNumber ? 'border-red-500' : 'border-[#ffabbb]/30'
-                        }`}
+                        className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff8a9f] focus:border-transparent transition-all duration-200 ${formErrors.phoneNumber ? 'border-red-500' : 'border-[#ffabbb]/30'
+                          }`}
                         placeholder="Enter your phone number"
                       />
                       {formErrors.phoneNumber && (
@@ -647,7 +711,7 @@ const Cart = () => {
                   </div>
 
                   <div className="mt-4 space-y-2">
-                    <CTAButton 
+                    <CTAButton
                       className="w-full text-base py-2"
                       onClick={handleCheckout}
                     >
