@@ -1,9 +1,13 @@
 import React from 'react';
 import CTAButton from '../CTAButton';
+import ROUTES from '../../router/routes';
+import { useNavigate } from 'react-router';
 
 const Hero = () => {
+  const navigate = useNavigate()
+
   const handleCTAClick = () => {
-    console.log('CTA clicked - Get Yours Now');
+    navigate(ROUTES.CART)
   };
 
   return (
@@ -57,7 +61,7 @@ const Hero = () => {
           size="lg"
           className="w-full sm:w-auto text-base px-6 py-2 font-bold"
         >
-          👉 Get Yours Now – From $16
+          👉 Get Yours Now – From ₹389
         </CTAButton>
         {/* Social Proof */}
         <div className="flex items-center gap-3 mt-7 text-xs sm:text-sm text-gray-500">

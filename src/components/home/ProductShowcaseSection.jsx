@@ -42,30 +42,34 @@ const ProductShowcaseSection = () => {
     {
       id: '1-pack',
       quantity: 1,
-      price: 16,
-      originalPrice: 16,
-      savings: 0,
+      price: 389,
+      originalPrice: 999,
+      savings: 610,
       popular: false,
-      description: 'Single pack'
+      description: 'Single pack',
+      discountPercent: 0
     },
     {
       id: '2-pack',
       quantity: 2,
-      price: 28,
-      originalPrice: 32,
-      savings: 4,
+      price: 629,
+      originalPrice: 1998,
+      savings: 1369,
       popular: false,
-      description: '2-pack bundle'
+      description: '2-pack bundle',
+      discountPercent: 10,
+      badge: '10% OFF'
     },
     {
       id: '4-pack',
       quantity: 4,
-      price: 44.16,
-      originalPrice: 64,
-      savings: 19.84,
+      price: 974,
+      originalPrice: 3996,
+      savings: 3022,
       popular: true,
-      badge: 'Best Value',
-      description: '4-pack bundle'
+      badge: '25% OFF - Best Value',
+      description: '4-pack bundle',
+      discountPercent: 25
     }
   ]
 
@@ -209,11 +213,11 @@ const ProductShowcaseSection = () => {
               </div>
               <div className="flex items-center gap-3 mb-2">
                 <div className="text-3xl font-bold text-gray-900">
-                  ${selectedBundleData?.price}
+                  ₹{selectedBundleData?.price}
                 </div>
                 {selectedBundleData?.savings > 0 && (
                   <div className="text-lg text-gray-500 line-through">
-                    ${selectedBundleData?.originalPrice}
+                    ₹{selectedBundleData?.originalPrice}
                   </div>
                 )}
               </div>
@@ -254,6 +258,10 @@ const ProductShowcaseSection = () => {
                     key={bundle.id}
                     onClick={() => setSelectedBundle(bundle.id)}
                     className={`w-full p-4 rounded-lg border-2 transition-all duration-300 text-left ${
+                      bundle.discountPercent === 25 
+                        ? 'ring-2 ring-red-400 ring-opacity-50 shadow-lg' 
+                        : ''
+                    } ${
                       selectedBundle === bundle.id
                         ? 'border-[#ff8a9f] bg-gradient-to-r from-[#ff8a9f]/10 to-[#ffabbb]/10'
                         : 'border-[#ffabbb]/30 hover:border-[#ff8a9f]/50'
@@ -269,15 +277,26 @@ const ProductShowcaseSection = () => {
                           )}
                         </div>
                         <div>
-                          <div className="font-medium text-gray-900">
-                            {bundle.quantity}-Pack
+                          <div className="flex items-center gap-2">
+                            <div className="font-medium text-gray-900">
+                              {bundle.quantity}-Pack
+                            </div>
+                            {bundle.discountPercent > 0 && (
+                              <span className={`inline-block px-2 py-1 rounded-full text-xs font-bold ${
+                                bundle.discountPercent === 25 
+                                  ? 'bg-gradient-to-r from-red-500 to-pink-500 text-white animate-pulse' 
+                                  : 'bg-gradient-to-r from-[#ff8a9f] to-[#ffabbb] text-white'
+                              }`}>
+                                {bundle.badge}
+                              </span>
+                            )}
                           </div>
                           <div className="text-sm text-gray-600">{bundle.description}</div>
                         </div>
                       </div>
                       <div className="text-right">
                         <div className="font-bold text-gray-900">
-                          ${bundle.price}
+                          ₹{bundle.price}
                         </div>
                         {bundle.savings > 0 && (
                           <div className="text-sm text-green-600">
@@ -286,13 +305,6 @@ const ProductShowcaseSection = () => {
                         )}
                       </div>
                     </div>
-                    {bundle.popular && (
-                      <div className="mt-2">
-                        <span className="inline-block bg-gradient-to-r from-[#ff8a9f] to-[#ffabbb] text-white px-3 py-1 rounded-full text-xs font-medium">
-                          {bundle.badge}
-                        </span>
-                      </div>
-                    )}
                   </button>
                 ))}
               </div>

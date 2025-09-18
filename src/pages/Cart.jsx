@@ -5,9 +5,14 @@ import Header from '../components/Header'
 import CTAButton from '../components/CTAButton'
 import SocialProofSection from '../components/home/SocialProofSection'
 import { ROUTES } from '../router/routes'
+import { BACKEND_URL } from '../api_service/BACKEND_URL'
+import axios from 'axios'
 
 const Cart = () => {
   const navigate = useNavigate()
+
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+
   const [cartItems, setCartItems] = useState([
     {
       id: 1,
@@ -15,10 +20,10 @@ const Cart = () => {
       color: 'cherry-red',
       colorName: 'Cherry Red',
       colorCode: '#DC2626',
-      quantity: 4,
-      price: 44.16,
-      originalPrice: 64,
-      savings: 19.84,
+      quantity: 1,
+      price: 974,
+      originalPrice: 3996,
+      savings: 3022,
       bundle: '4-pack',
       image: '/jelly-clip-main-2.png',
       media: [
@@ -36,34 +41,47 @@ const Cart = () => {
   const [selectedBundle, setSelectedBundle] = useState('4-pack')
   const [selectedColor, setSelectedColor] = useState('cherry-red')
 
+  // Customer Information Form State
+  const [customerInfo, setCustomerInfo] = useState({
+    fullName: '',
+    email: '',
+    phoneNumber: ''
+  })
+
+  const [formErrors, setFormErrors] = useState({})
+
   const bundles = [
     {
       id: '1-pack',
       quantity: 1,
-      price: 16,
-      originalPrice: 16,
-      savings: 0,
+      price: 389,
+      originalPrice: 999,
+      savings: 610,
       popular: false,
-      description: 'Single pack'
+      description: 'Single pack',
+      discountPercent: 0
     },
     {
       id: '2-pack',
       quantity: 2,
-      price: 28,
-      originalPrice: 32,
-      savings: 4,
+      price: 629,
+      originalPrice: 1998,
+      savings: 1369,
       popular: false,
-      description: '2-pack bundle'
+      description: '2-pack bundle',
+      discountPercent: 10,
+      badge: '10% OFF'
     },
     {
       id: '4-pack',
       quantity: 4,
-      price: 44.16,
-      originalPrice: 64,
-      savings: 19.84,
+      price: 974,
+      originalPrice: 3996,
+      savings: 3022,
       popular: true,
-      badge: 'Best Value',
-      description: '4-pack bundle'
+      badge: '25% OFF - Best Value',
+      description: '4-pack bundle',
+      discountPercent: 25
     }
   ]
 
@@ -102,9 +120,10 @@ const Cart = () => {
   const selectedColorData = colors.find(c => c.id === selectedColor)
   const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
   const totalSavings = cartItems.reduce((sum, item) => sum + (item.savings * item.quantity), 0)
-  const shipping = subtotal > 50 ? 0 : 5.99
-  const tax = subtotal * 0.08
-  const total = subtotal + shipping + tax
+  // const shipping = subtotal > 50 ? 0 : 5.99
+  // const tax = subtotal * 0.08
+  // const total = subtotal + shipping + tax
+  const total = subtotal
 
   const updateQuantity = (id, newQuantity) => {
     if (newQuantity < 1) return
@@ -113,6 +132,22 @@ const Cart = () => {
         item.id === id ? { ...item, quantity: newQuantity } : item
       )
     )
+  }
+
+  const updateBundle = (bundleId) => {
+    setSelectedBundle(bundleId)
+    const bundle = bundles.find(b => b.id === bundleId)
+    if (bundle) {
+      setCartItems(items =>
+        items.map(item => ({
+          ...item,
+          price: bundle.price,
+          originalPrice: bundle.originalPrice,
+          savings: bundle.savings,
+          bundle: bundleId
+        }))
+      )
+    }
   }
 
   const nextMedia = () => {
@@ -127,6 +162,114 @@ const Cart = () => {
     setCurrentMediaIndex(index)
   }
 
+  const handleInputChange = (field, value) => {
+    setCustomerInfo(prev => ({
+      ...prev,
+      [field]: value
+    }))
+    
+    // Clear error when user starts typing
+    if (formErrors[field]) {
+      setFormErrors(prev => ({
+        ...prev,
+        [field]: ''
+      }))
+    }
+  }
+
+  const validateForm = () => {
+    const errors = {}
+    
+    if (!customerInfo.fullName.trim()) {
+      errors.fullName = 'Full name is required'
+    }
+    
+    if (!customerInfo.email.trim()) {
+      errors.email = 'Email is required'
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerInfo.email)) {
+      errors.email = 'Please enter a valid email'
+    }
+    
+    if (!customerInfo.phoneNumber.trim()) {
+      errors.phoneNumber = 'Phone number is required'
+    } else if (!/^[\+]?[1-9][\d]{0,15}$/.test(customerInfo.phoneNumber.replace(/[\s\-\(\)]/g, ''))) {
+      errors.phoneNumber = 'Please enter a valid phone number'
+    }
+    
+    setFormErrors(errors)
+    return Object.keys(errors).length === 0
+  }
+
+  const handleCheckout = async () => {
+    if (validateForm()) {
+      console.log('Customer Info:', customerInfo)
+      console.log('Proceeding to checkout...')
+      try {
+        setIsCheckingOut(true);
+
+        const res = await axios.post(
+          `${BACKEND_URL}/api/payment/razorpay`,
+          {
+            amount: total, // Convert to paise for Razorpay
+          }
+        );
+
+        const data = res.data.data;
+
+        const options = {
+          key: import.meta.env.VITE_RAZORPAY_KEY,
+          amount: total * 100, // Convert to paise for Razorpay
+          currency: "INR",
+          name: "JellyClip",
+          description: "JellyClip Hair Clips Order Payment",
+          order_id: data.orderId,
+          handler: async function (response) {
+            try {
+              await axios.post(`${BACKEND_URL}/api/lander8/create-order`, {
+                amount: total,
+                razorpayOrderId: response.razorpay_order_id,
+                razorpayPaymentId: response.razorpay_payment_id,
+                razorpaySignature: response.razorpay_signature,
+                fullName: customerInfo?.fullName,
+                email: customerInfo?.email,
+                phoneNumber: customerInfo?.phoneNumber,
+                // profession: consultationFormData?.profession,
+                // remarks: consultationFormData?.remarks,
+                orderId: data.orderId,
+                // additionalProducts: additionalProducts,
+              });
+
+              navigate("/order-confirmation", {
+                state: {
+                  orderId: data.orderId,
+                  amount: total,
+                },
+              });
+            } catch (error) {
+              console.error("Error creating order:", error);
+              alert("Payment successful but order creation failed. Please contact support.");
+            }
+          },
+          prefill: {
+            name: customerInfo?.fullName,
+            email: customerInfo?.email,
+            contact: customerInfo?.phoneNumber,
+          },
+          theme: {
+            color: "#000000",
+          },
+        };
+
+        const rzp = new window.Razorpay(options);
+        rzp.open();
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsCheckingOut(false);
+      }
+    }
+  };
+
   // Auto-scroll functionality for media
   useEffect(() => {
     if (cartItems[0]?.media.length > 1) {
@@ -137,6 +280,26 @@ const Cart = () => {
       return () => clearInterval(interval)
     }
   }, [cartItems])
+
+  const loadScript = (src) => {
+    return new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src = src;
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
+  useEffect(() => {
+    loadScript("https://checkout.razorpay.com/v1/checkout.js").then(
+      (result) => {
+        if (result) {
+          console.log("Razorpay script loaded successfully");
+        }
+      }
+    );
+  }, []);
 
   if (cartItems.length === 0) {
     return (
@@ -199,12 +362,12 @@ const Cart = () => {
           </div>
 
           {/* Media Type Indicator */}
-          <div className="absolute top-4 left-4">
+          {/* <div className="absolute top-4 left-4">
             <div className="bg-white/90 rounded-full px-3 py-1 text-xs font-semibold text-[#ff8a9f] flex items-center gap-1">
               {currentMedia.type === 'video' ? <Play className="w-3 h-3" /> : <Heart className="w-3 h-3" />}
               {currentMedia.type === 'video' ? 'Video' : 'Image'}
             </div>
-          </div>
+          </div> */}
 
           {/* Media Dots */}
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
@@ -277,12 +440,16 @@ const Cart = () => {
                 {/* Bundle Selection */}
                 <div className="mb-4">
                   <h3 className="text-sm font-semibold text-gray-900 mb-2">Bundle</h3>
-                  <div className="space-y-1">
+                  <div className="space-y-3">
                     {bundles.map((bundle) => (
                       <button
                         key={bundle.id}
-                        onClick={() => setSelectedBundle(bundle.id)}
-                        className={`w-full p-2 rounded-lg border-2 transition-all duration-300 text-left ${selectedBundle === bundle.id
+                        onClick={() => updateBundle(bundle.id)}
+                        className={`w-full p-2 rounded-lg border-2 transition-all duration-300 text-left ${
+                          bundle.discountPercent === 25 
+                            ? 'ring-2 ring-red-400 ring-opacity-50 shadow-lg' 
+                            : ''
+                        } ${selectedBundle === bundle.id
                           ? 'border-[#ff8a9f] bg-gradient-to-r from-[#ff8a9f]/10 to-[#ffabbb]/10'
                           : 'border-[#ffabbb]/30 hover:border-[#ff8a9f]/50'
                           }`}
@@ -300,29 +467,30 @@ const Cart = () => {
                                 <div className="font-medium text-gray-900 text-sm">
                                   {bundle.quantity}-Pack
                                 </div>
-                                <div className="text-center">
-                                  <span className="inline-block mb-1 bg-gradient-to-r from-[#ff8a9f] to-[#ffabbb] text-white px-2 py-1 rounded-full text-xs font-medium">
+                                {bundle.discountPercent > 0 && (
+                                  <span className={`inline-block px-2 py-1 rounded-full text-xs font-bold ${
+                                    bundle.discountPercent === 25 
+                                      ? 'bg-gradient-to-r from-red-500 to-pink-500 text-white animate-pulse' 
+                                      : 'bg-gradient-to-r from-[#ff8a9f] to-[#ffabbb] text-white'
+                                  }`}>
                                     {bundle.badge}
                                   </span>
-                                </div>
+                                )}
                               </div>
                               <div className="text-xs text-gray-600">{bundle.description}</div>
                             </div>
                           </div>
                           <div className="text-right">
                             <div className="font-bold text-gray-900 text-sm">
-                              ${bundle.price}
+                              ₹{bundle.price}
                             </div>
                             {bundle.savings > 0 && (
                               <div className="text-xs text-green-600">
-                                Save ${bundle.savings.toFixed(2)}
+                                Save ₹{bundle.savings.toFixed(2)}
                               </div>
                             )}
                           </div>
                         </div>
-                        {/* {bundle.popular && (
-                         
-                        )} */}
                       </button>
                     ))}
                   </div>
@@ -335,17 +503,17 @@ const Cart = () => {
                     <div className="space-y-1">
                       <div className='flex flex-row items-center gap-2'>
                         <div className="text-2xl font-bold text-gray-900">
-                          ${(cartItems[0].price * cartItems[0].quantity).toFixed(2)}
+                          ₹{(cartItems[0].price * cartItems[0].quantity).toFixed(2)}
                         </div>
                         {cartItems[0].savings > 0 && (
                           <div className="text-lg text-gray-500 line-through">
-                            ${(cartItems[0].originalPrice * cartItems[0].quantity).toFixed(2)}
+                            ₹{(cartItems[0].originalPrice * cartItems[0].quantity).toFixed(2)}
                           </div>
                         )}
                       </div>
                       {cartItems[0].savings > 0 && (
                         <div className="text-sm text-green-600 font-semibold">
-                          Save ${(cartItems[0].savings * cartItems[0].quantity).toFixed(2)}
+                          Save ₹{(cartItems[0].savings * cartItems[0].quantity).toFixed(2)}
                         </div>
                       )}
                     </div>
@@ -370,71 +538,129 @@ const Cart = () => {
                 </div>
               </div>
 
-              {/* Order Summary - Compact */}
+              {/* Customer Information Form & Order Summary */}
               <div className="space-y-4">
+                {/* Customer Information Form */}
+                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-lg border border-[#ffabbb]/20">
+                  <h3 className="text-lg font-bold text-gray-900 mb-4 text-center">Customer Information</h3>
+                  
+                  <div className="space-y-4">
+                    {/* Full Name */}
+                    <div>
+                      <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">
+                        Full Name *
+                      </label>
+                      <input
+                        type="text"
+                        id="fullName"
+                        value={customerInfo.fullName}
+                        onChange={(e) => handleInputChange('fullName', e.target.value)}
+                        className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff8a9f] focus:border-transparent transition-all duration-200 ${
+                          formErrors.fullName ? 'border-red-500' : 'border-[#ffabbb]/30'
+                        }`}
+                        placeholder="Enter your full name"
+                      />
+                      {formErrors.fullName && (
+                        <p className="text-red-500 text-xs mt-1">{formErrors.fullName}</p>
+                      )}
+                    </div>
+
+                    {/* Email */}
+                    <div>
+                      <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                        Email Address *
+                      </label>
+                      <input
+                        type="email"
+                        id="email"
+                        value={customerInfo.email}
+                        onChange={(e) => handleInputChange('email', e.target.value)}
+                        className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff8a9f] focus:border-transparent transition-all duration-200 ${
+                          formErrors.email ? 'border-red-500' : 'border-[#ffabbb]/30'
+                        }`}
+                        placeholder="Enter your email address"
+                      />
+                      {formErrors.email && (
+                        <p className="text-red-500 text-xs mt-1">{formErrors.email}</p>
+                      )}
+                    </div>
+
+                    {/* Phone Number */}
+                    <div>
+                      <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700 mb-1">
+                        Phone Number *
+                      </label>
+                      <input
+                        type="tel"
+                        id="phoneNumber"
+                        value={customerInfo.phoneNumber}
+                        onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
+                        className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff8a9f] focus:border-transparent transition-all duration-200 ${
+                          formErrors.phoneNumber ? 'border-red-500' : 'border-[#ffabbb]/30'
+                        }`}
+                        placeholder="Enter your phone number"
+                      />
+                      {formErrors.phoneNumber && (
+                        <p className="text-red-500 text-xs mt-1">{formErrors.phoneNumber}</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Order Summary - Compact */}
                 <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-lg border border-[#ffabbb]/20">
                   <h3 className="text-lg font-bold text-gray-900 mb-3 text-center">Order Summary</h3>
 
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-600">Subtotal</span>
-                      <span className="font-semibold">${subtotal.toFixed(2)}</span>
+                      <span className="font-semibold">₹{subtotal.toFixed(2)}</span>
                     </div>
 
                     {totalSavings > 0 && (
                       <div className="flex justify-between text-sm text-green-600">
                         <span>Savings</span>
-                        <span className="font-semibold">-${totalSavings.toFixed(2)}</span>
+                        <span className="font-semibold">-₹{totalSavings.toFixed(2)}</span>
                       </div>
                     )}
 
-                    <div className="flex justify-between text-sm">
+                    {/* Shipping - Commented Out */}
+                    {/* <div className="flex justify-between text-sm">
                       <span className="text-gray-600">Shipping</span>
                       <span className="font-semibold">
                         {shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}
                       </span>
-                    </div>
+                    </div> */}
 
-                    <div className="flex justify-between text-sm">
+                    {/* Tax - Commented Out */}
+                    {/* <div className="flex justify-between text-sm">
                       <span className="text-gray-600">Tax</span>
                       <span className="font-semibold">${tax.toFixed(2)}</span>
-                    </div>
+                    </div> */}
 
                     <div className="border-t border-[#ffabbb]/20 pt-2">
                       <div className="flex justify-between text-lg font-bold text-gray-900">
                         <span>Total</span>
-                        <span>${total.toFixed(2)}</span>
+                        <span>₹{total.toFixed(2)}</span>
                       </div>
                     </div>
                   </div>
 
                   <div className="mt-4 space-y-2">
-                    <CTAButton className="w-full text-base py-2">
+                    <CTAButton 
+                      className="w-full text-base py-2"
+                      onClick={handleCheckout}
+                    >
                       Proceed to Checkout
                     </CTAButton>
-
-                    {/* <button
-                      onClick={() => navigate(ROUTES.HOME)}
-                      className="w-full py-2 border-2 border-[#ffabbb] text-[#ff8a9f] rounded-lg font-semibold hover:bg-[#ff8a9f] hover:text-white transition-all duration-200 text-sm"
-                    >
-                      Continue Shopping
-                    </button> */}
                   </div>
 
                   {/* Trust Badges - Minimal */}
-                  <div className="mt-4 flex flex-col items-center justify-center  space-y-1">
+                  <div className="mt-4 flex flex-col items-center justify-center space-y-1">
                     <div className="flex items-center gap-2 text-xs text-gray-600">
                       <Shield className="w-3 h-3 text-[#ff8a9f]" />
                       <span>Secure checkout</span>
                     </div>
-                    {/* <div className="flex items-center gap-2 text-xs text-gray-600">
-                      <Truck className="w-3 h-3 text-[#ff8a9f]" />
-                      <span>Free shipping over $50</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-gray-600">
-                      <RotateCcw className="w-3 h-3 text-[#ff8a9f]" />
-                      <span>30-day returns</span>
-                    </div> */}
                   </div>
                 </div>
               </div>

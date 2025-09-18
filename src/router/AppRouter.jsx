@@ -4,6 +4,7 @@ import Home from '../pages/Home';
 import NotFound from '../pages/NotFound';
 import { ROUTES } from './routes';
 import Cart from '../pages/Cart';
+import OrderConfirmation from '../pages/OrderConfirmation';
 
 // Create the router configuration
 export const router = createBrowserRouter([
@@ -18,6 +19,10 @@ export const router = createBrowserRouter([
   {
     path: ROUTES.CART,
     element: <Cart />,
+  },
+  {
+    path: ROUTES.ORDER_CONFIRMATION,
+    element: <OrderConfirmation />,
   },
   {
     path: '*',

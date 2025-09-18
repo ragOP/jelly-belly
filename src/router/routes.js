@@ -2,6 +2,7 @@
 export const ROUTES = {
   HOME: '/home',
   CART: '/cart',
+  ORDER_CONFIRMATION: '/order-confirmation',
   ROOT: '/',
 };
 
@@ -20,6 +21,11 @@ export const routeConfig = [
     path: ROUTES.CART,
     name: 'Cart',
     component: 'Cart',
+  },
+  {
+    path: ROUTES.ORDER_CONFIRMATION,
+    name: 'OrderConfirmation',
+    component: 'OrderConfirmation',
   },
 ];
 

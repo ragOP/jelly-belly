@@ -1,12 +1,14 @@
 import { ShoppingCart, Heart, Star, ArrowRight, Shield, Truck, RotateCcw } from 'lucide-react'
 import CTAButton from '../CTAButton'
+import { useNavigate } from 'react-router';
+import ROUTES from '../../router/routes';
 
 const ClosingCTASection = () => {
+  const navigate = useNavigate()
+
   const handleCTAClick = () => {
-    console.log('Final CTA clicked - Get Yours Now');
+    navigate(ROUTES.CART)
   };
-
-
 
   return (
     <section className="py-8 md:py-24 bg-gradient-to-br from-[#fff5f7] via-[#fffafd] to-[#ffe1e7] relative overflow-hidden">
@@ -45,7 +47,7 @@ const ClosingCTASection = () => {
           className="w-full text-xl px-8 py-6 font-bold flex items-center justify-center gap-3 shadow-2xl"
         >
           <ShoppingCart className="w-7 h-7" />
-          Get Yours Now – From $16
+          Get Yours Now – From ₹389
           <ArrowRight className="w-7 h-7" />
         </CTAButton>
 
