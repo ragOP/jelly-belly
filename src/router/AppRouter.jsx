@@ -5,6 +5,7 @@ import NotFound from '../pages/NotFound';
 import { ROUTES } from './routes';
 import Cart from '../pages/Cart';
 import OrderConfirmation from '../pages/OrderConfirmation';
+import Record from '../pages/Record';
 
 // Create the router configuration
 export const router = createBrowserRouter([
@@ -23,6 +24,10 @@ export const router = createBrowserRouter([
   {
     path: ROUTES.ORDER_CONFIRMATION,
     element: <OrderConfirmation />,
+  },
+  {
+    path: ROUTES.RECORD,
+    element: <Record />,
   },
   {
     path: '*',
